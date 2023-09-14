@@ -77,6 +77,7 @@ def extract(
         response.encoding = 'utf-8-sig'
 
         if headers.get('content-type') == 'text/xml':
+            print('XPATH', xpath)
             data = pd.read_xml(response.text, xpath=xpath)
         else:
             data = pd.json_normalize(response.json()[json_key])

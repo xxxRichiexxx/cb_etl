@@ -67,7 +67,7 @@ with DAG(
                         'method': 'post',
                         'headers': headers,
                         'post_data': data,
-                        'xpath': '//KR',
+                        'xpath': "//KR",
                     },
                 )
         task1
