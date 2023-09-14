@@ -105,7 +105,7 @@ with DAG(
                 )
     
         get_usa_course = PythonOperator(
-                    task_id=f'get_news',
+                    task_id=f'get_usa_course',
                     python_callable=etl,
                     op_kwargs={
                         'data_type': 'stage_cb_usa_course',
