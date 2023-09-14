@@ -65,7 +65,7 @@ with DAG(
                         'api_endpoint': api_endpoint,
                         'dwh_engine': dwh_engine,
                         'method': 'post',
-                        'headers': 'headers',
+                        'headers': headers,
                         'post_data': data,
                         'xpath': '//KR',
                     },
