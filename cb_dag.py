@@ -22,7 +22,7 @@ data = """<?xml version="1.0" encoding="utf-8"?>
             <soap:Body>
                 <KeyRateXML xmlns="http://web.cbr.ru/">
                 <fromDate>{0}</fromDate>
-                <ToDate>{0}</ToDate>
+                <ToDate>{1}</ToDate>
                 </KeyRateXML>
             </soap:Body>
             </soap:Envelope>"""
