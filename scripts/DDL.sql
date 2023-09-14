@@ -30,6 +30,19 @@ CREATE TABLE sttgaz.stage_cb_usa_course(
     load_date date
 )
 ORDER BY CursDate
+PARTITION BY load_date;
+
+DROP TABLE IF EXISTS sttgaz.stage_cb_yuan_course;
+CREATE TABLE sttgaz.stage_cb_yuan_course(
+	CursDate TIMESTAMP,
+	Vcode VARCHAR(100),
+    Title  VARCHAR(1000),
+    Vnom INT,
+    Vcurs NUMERIC(7,3),
+    VunitRate NUMERIC(7,3),
+    load_date date
+)
+ORDER BY CursDate
 PARTITION BY load_date;	
 	
 	

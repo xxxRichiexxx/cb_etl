@@ -48,6 +48,17 @@ get_usa_course = """<?xml version="1.0" encoding="utf-8"?>
             </soap:Body>
             </soap:Envelope>"""
 
+get_yuan_course = """<?xml version="1.0" encoding="utf-8"?>
+            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+            <soap:Body>
+                <GetCursDynamicXML xmlns="http://web.cbr.ru/">
+                <FromDate>{0}</FromDate>
+                <ToDate>{1}</ToDate>
+                <ValutaCode>R01375</ValutaCode>
+                </GetCursDynamicXML>
+            </soap:Body>
+            </soap:Envelope>"""
+
 headers = {'content-type': 'text/xml'}
 
 dwh_con = BaseHook.get_connection('vertica')
@@ -118,7 +129,21 @@ with DAG(
                     },
                 )
         
-        [get_stavka, get_news, get_usa_course]
+        get_yuan_course = PythonOperator(
+                    task_id=f'get_yuan_course',
+                    python_callable=etl,
+                    op_kwargs={
+                        'data_type': 'stage_cb_yuan_course',
+                        'api_endpoint': api_endpoint,
+                        'dwh_engine': dwh_engine,
+                        'method': 'post',
+                        'headers': headers,
+                        'post_data': get_yuan_course,
+                        'xpath': "//ValuteCursDynamic",
+                    },
+                )
+        
+        [get_stavka, get_news, get_usa_course, get_yuan_course]
 
     with TaskGroup('Загрузка_данных_в_dds_слой') as data_to_dds:
 
