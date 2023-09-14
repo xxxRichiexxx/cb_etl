@@ -184,8 +184,7 @@ def etl(
         execution_date = context['execution_date'].date()
 
     start_date = execution_date.replace(day=1)
-    end_date = (execution_date.replace(day=28) + dt.timedelta(days=4)) \
-        .replace(day=1) - dt.timedelta(days=1)
+    end_date = (execution_date.replace(day=28) + dt.timedelta(days=4)).replace(day=1)
     
     data = extract(
         source_engine,
