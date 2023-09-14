@@ -1,42 +1,9 @@
-# import requests
-# import pandas as pd
-
-
-
-
-# data = """<?xml version="1.0" encoding="utf-8"?>
-#             <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-#             <soap:Body>
-#                 <KeyRateXML xmlns="http://web.cbr.ru/">
-#                 <fromDate>2020-01-01</fromDate>
-#                 <ToDate>2023-09-01</ToDate>
-#                 </KeyRateXML>
-#             </soap:Body>
-#             </soap:Envelope>"""
-# headers = {'content-type': 'text/xml'}
-
-# response = requests.post(
-#     'https://cbr.ru/DailyInfoWebServ/DailyInfo.asmx',
-#     data = data,
-#     headers = headers,
-#     verify=False,
-# )
-# response.raise_for_status()
-
-# print(response.text)
-
-# data = pd.read_xml(response.text, xpath="//KR")
-
-# print(data)
-
-
 import pandas as pd
 import numpy as np
 import datetime as dt
 import requests
 from pprint import pprint
 import os
-from sqlalchemy import text
 
 
 def extract(
@@ -203,60 +170,3 @@ def etl(
     data = transform(data, column_names, start_date)
 
     load(data, dwh_engine, data_type, start_date)
-
-    # if column_to_check:
-
-    #     try:
-    #         data[column_to_check] = data[column_to_check].str.strip()
-    #         data = data.replace(r'^\s*$', np.nan, regex=True)
-    #         data[column_to_check] = data[column_to_check].fillna(0).astype(np.int64)
-    #         value = sum(data[column_to_check])
-    #     except KeyError:
-    #         value = 0
-
-    #     context['ti'].xcom_push(
-    #         key=data_type,
-    #         value=value
-    #     )
-
-
-
-
-
-
-
-# data = """<?xml version="1.0" encoding="utf-8"?>
-#             <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-#             <soap:Body>
-#                 <KeyRateXML xmlns="http://web.cbr.ru/">
-#                 <fromDate>2020-01-01</fromDate>
-#                 <ToDate>2023-09-01</ToDate>
-#                 </KeyRateXML>
-#             </soap:Body>
-#             </soap:Envelope>"""
-# headers = {'content-type': 'text/xml'}
-
-# response = requests.post(
-#     'https://cbr.ru/DailyInfoWebServ/DailyInfo.asmx',
-#     data = data,
-#     headers = headers,
-#     verify=False,
-# )
-# response.raise_for_status()
-
-# print(response.text)
-
-# data = pd.read_xml(response.text, xpath="//KR")
-
-# print(data)
-
-
-# extract(
-#     api_endpoint='https://cbr.ru/DailyInfoWebServ/DailyInfo.asmx',
-#     method='post',
-#     headers=headers,
-#     post_data=data,
-#     xpath="//KR",
-#     start_date=None,
-#     end_date=None,    
-# )

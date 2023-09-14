@@ -17,7 +17,7 @@ from cb_etl.scripts.collable import etl
 source_con = BaseHook.get_connection('cb')
 api_endpoint = source_con.host
 
-data = """<?xml version="1.0" encoding="utf-8"?>
+get_stavka = """<?xml version="1.0" encoding="utf-8"?>
             <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
             <soap:Body>
                 <KeyRateXML xmlns="http://web.cbr.ru/">
@@ -27,15 +27,23 @@ data = """<?xml version="1.0" encoding="utf-8"?>
             </soap:Body>
             </soap:Envelope>"""
 
-headers = {'content-type': 'text/xml'}
+get_news = """<?xml version="1.0" encoding="utf-8"?>
+            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+            <soap:Body>
+                <NewsInfoXML xmlns="http://web.cbr.ru/">
+                <fromDate>{0}</fromDate>
+                <ToDate>{1}</ToDate>
+                </NewsInfoXML>
+            </soap:Body>
+            </soap:Envelope>"""
 
+headers = {'content-type': 'text/xml'}
 
 dwh_con = BaseHook.get_connection('vertica')
 ps = quote(dwh_con.password)
 dwh_engine = sa.create_engine(
     f'vertica+vertica_python://{dwh_con.login}:{ps}@{dwh_con.host}:{dwh_con.port}/sttgaz'
 )
-
 
 default_args = {
     'owner': 'Швейников Андрей',
@@ -57,7 +65,7 @@ with DAG(
 
     with TaskGroup('Загрузка_данных_в_stage_слой') as data_to_stage:
 
-        task1 = PythonOperator(
+        get_stavka = PythonOperator(
                     task_id=f'get_stavka',
                     python_callable=etl,
                     op_kwargs={
@@ -66,11 +74,26 @@ with DAG(
                         'dwh_engine': dwh_engine,
                         'method': 'post',
                         'headers': headers,
-                        'post_data': data,
+                        'post_data': get_stavka,
                         'xpath': "//KR",
                     },
                 )
-        task1
+        
+        get_news = PythonOperator(
+                    task_id=f'get_news',
+                    python_callable=etl,
+                    op_kwargs={
+                        'data_type': 'stage_cb_news',
+                        'api_endpoint': api_endpoint,
+                        'dwh_engine': dwh_engine,
+                        'method': 'post',
+                        'headers': headers,
+                        'post_data': get_news,
+                        'xpath': "//News",
+                    },
+                )
+        
+        [get_stavka,  get_news]
 
     with TaskGroup('Загрузка_данных_в_dds_слой') as data_to_dds:
 
