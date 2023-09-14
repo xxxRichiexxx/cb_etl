@@ -118,7 +118,7 @@ with DAG(
                     },
                 )
         
-        [get_stavka,  get_news, get_usa_course]
+        [get_stavka, get_news, get_usa_course]
 
     with TaskGroup('Загрузка_данных_в_dds_слой') as data_to_dds:
 
