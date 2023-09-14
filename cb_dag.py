@@ -11,7 +11,7 @@ from airflow.hooks.base import BaseHook
 from airflow.operators.dummy import DummyOperator
 from airflow.contrib.operators.vertica_operator import VerticaOperator
 
-from erp_etl.scripts.collable import etl
+from cb_etl.scripts.collable import etl
 
 
 source_con = BaseHook.get_connection('cb')
