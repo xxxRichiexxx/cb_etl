@@ -62,6 +62,7 @@ def extract(
 
         print('Извлекаем данные из апи')
         print('api_endpoint', api_endpoint, 'auth', auth, 'params', params, 'headers', headers)
+        print('DATA', post_data.format(start_date, end_date))
 
         response = getattr(requests, method, 'get')(
             api_endpoint,
