@@ -2,14 +2,12 @@
 import sqlalchemy as sa
 from urllib.parse import quote
 import datetime as dt
-from dateutil.relativedelta import relativedelta
 
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from airflow.utils.task_group import TaskGroup
 from airflow.hooks.base import BaseHook
 from airflow.operators.dummy import DummyOperator
-from airflow.contrib.operators.vertica_operator import VerticaOperator
 
 from cb_etl.scripts.collable import etl
 
@@ -78,7 +76,7 @@ with DAG(
         default_args=default_args,
         description='Получение данных из ЦЕНТРОБАНКА.',
         start_date=dt.datetime(2020, 1, 1),
-        schedule_interval='@daily',
+        schedule_interval='@hourly',
         catchup=True,
         max_active_runs=1
 ) as dag:
